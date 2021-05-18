@@ -1,0 +1,15 @@
+log4j.rootLogger=DEBUG, stdout, file
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=[%d][%p][%F:%L][TID=%t] %m%n
+
+log4j.appender.file=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.file.Threshold=DEBUG
+log4j.appender.file.File=logs/pdd.log
+log4j.appender.file.layout=org.apache.log4j.PatternLayout
+log4j.appender.file.layout.ConversionPattern=[%d][%p][%F:%L][TID=%t] %m%n
+
+log4j.logger.org.springframework=WARN
+log4j.logger.freemarker=WARN
+log4j.logger.org.apache.http=WARN

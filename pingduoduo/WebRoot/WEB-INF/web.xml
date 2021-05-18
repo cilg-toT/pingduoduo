@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/conf/spring_common.xml
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>
+			org.springframework.web.context.request.RequestContextListener
+		</listener-class>
+	</listener>
+	
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+
+	<listener>   
+    	<listener-class>
+    		com.zyinf.servlet.ContextFinalizer
+    	</listener-class>   
+	</listener>    
+	
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>pingduoduo</param-value>
+	</context-param>
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/conf/web.log4j
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>
+			org.springframework.web.util.Log4jConfigListener
+		</listener-class>
+	</listener>
+
+	<servlet>
+    	<servlet-name>OrderServlet</servlet-name>
+    	<servlet-class>com.zyinf.servlet.OrderServlet</servlet-class>
+  	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>OrderServlet</servlet-name>
+    	<url-pattern>/order.json</url-pattern>
+  	</servlet-mapping>
+
+
+   	<welcome-file-list>
+    	<welcome-file>index.txt</welcome-file>
+  	</welcome-file-list>
+</web-app>
