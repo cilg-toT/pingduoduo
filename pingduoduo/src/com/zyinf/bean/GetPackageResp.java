@@ -10,6 +10,8 @@ public class GetPackageResp extends OrderResp {
 	}
 	public void setPackages(GetPackageResp_Package[] packages) {
 		Packages = packages;
+		for(int i = 0;i< Packages.length;i++){
+		}
 	}
 	@Override
 	public String toString() {
@@ -17,6 +19,7 @@ public class GetPackageResp extends OrderResp {
 				+ ", getCode()=" + getCode() + ", getMessage()=" + getMessage()
 				+ "]";
 	}
+	
 
 	
 }

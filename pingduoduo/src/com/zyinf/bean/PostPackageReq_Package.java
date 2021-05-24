@@ -1,40 +1,6 @@
 package com.zyinf.bean;
 
-public class GetPackageResp_Package {
-	private String Package;
-	private String Name;
-	private String Price;
-	private String Type;
-	
-	
-	public String getPackage() {
-		return Package;
-	}
-	public void setPackage(String package1) {
-		Package = package1;
-		PROD_NO = Package;
-	}
-	public String getName() {
-		return Name;
-	}
-	public void setName(String name) {
-		Name = name;
-		PROD_NAME = name;
-	}
-	public String getPrice() {
-		return Price;
-	}
-	public void setPrice(String price) {
-		Price = price;
-		PAR_PRICE = price;
-	}
-	public String getType() {
-		return Type;
-	}
-	public void setType(String type) {
-		Type = type;
-	}
-	
+public class PostPackageReq_Package extends GetPackageResp_Package {
 	
 	//wzl  返回给拼多多的字符串
 	private String PROD_NO;
@@ -43,7 +9,6 @@ public class GetPackageResp_Package {
 	private String RES_TYPE;
 	private String DATA_FLOAT;
 	private String PAR_PRICE;
-	
 	
 	
 	public String getPROD_NO() {
@@ -84,8 +49,8 @@ public class GetPackageResp_Package {
 	}
 	@Override
 	public String toString() {
-		return "GetPackageResp_Package [Name=" + Name + ", Package=" + Package
-				+ ", Price=" + Price + ", Type=" + Type + "]";
+		return "GetPackageResp_Package [Name=" + PAR_PRICE + ", Package=" + PROD_NO
+				+ ", PROD_NAME=" + RES_TYPE + ", DATA_FLOAT=" + DATA_FLOAT+ "]";
 	}
 
 }
