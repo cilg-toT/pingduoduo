@@ -33,7 +33,8 @@ public class MyServiceImpl implements MyService {
 	static Logger log = Logger.getLogger(MyServiceImpl.class.getName());
 	
 	static MaiYuanService maiYuanService = new MaiYuanServiceImpl();
-	static String orderDataFlowUrl = "http://host.com/api.aspx";
+	static String PDD_SecretKey = "E47D6A7C2E8EDDE0F303919B694DEA67";
+	
 	
 	public void init() throws Exception {
 	}
@@ -80,14 +81,23 @@ public class MyServiceImpl implements MyService {
 		form.add("PackageType", "1");
 		 
 		form.add("account", maiYuanService.getAccount()).add("mobile", mobile).add("package", packageRespon.getPackage());
-		form.add("sign", maiYuanService.getSign(mobile, packageRespon.getPackage()));
+		
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("account", maiYuanService.getAccount());
+		map.put("mobile", mobile);
+		map.put("package",packageRespon.getPackage());
+		form.add("sign", maiYuanService.getMYSign(map));
+		
 		
 		try {
-			String resp = Request.Post(orderDataFlowUrl).bodyForm(form.build()).execute().returnContent().asString();
+			String resp = Request.Post(maiYuanService.getLiuLiangUrl()).bodyForm(form.build()).execute().returnContent().asString();
 			PostOrderDataFlowReq data =  new Gson().fromJson(resp, PostOrderDataFlowReq.class);
 			
 			Date date = new Date();
-			data.setMoreData(outOrderNo, packageRespon.getPrice(), mobile, packageRespon.getPackage(), date.toLocaleString());
+			data.setMoreData(outOrderNo, packageRespon.getPrice(), mobile, packageRespon.getPackage(), date.getTime()+"");
+			if(data.getCode().equals("0")){
+				maiYuanService.saveNotifyUrl(notifyUrl, outOrderNo);
+			}
 			return data ;
 			
 			
@@ -98,6 +108,90 @@ public class MyServiceImpl implements MyService {
 		
 		return null;
 	}
+
+	@Override
+	public String notifyUrl(String outOrderNo, String orderNo, String status) {
+		// TODO Auto-generated method stub
+		status = status.equals("4")?"SUCCESS":"FAIL";
+		Map<String,String> map = new HashMap<String,String>();
+		
+		
+		map.put("order_sn", outOrderNo);
+		map.put("outer_order_sn", orderNo);
+		map.put("status", status);
+		map.put("mall_id", "637786");
+		Date date = new Date();
+		String timestamp = date.getTime()/1000+"";
+		timestamp = "1506674045";
+		map.put("type", "pdd.virtual.mobile.charge.notify");
+		map.put("data_type", "JSON");
+		map.put("timestamp", timestamp);
+		
+		String sign = PDD_Md5(map,PDD_SecretKey);
+		
+		String PDD_Url="http://open.yangkeduo.com/api/router?type=pdd.virtual.mobile.charge.notify&data_type=JSON&timestamp="+timestamp
+				+"&order_sn="+outOrderNo
+				+"&outer_order_sn="+orderNo
+				+"&status="+status
+				+"&mall_id=637786&sign="+sign;
+		
+		try {
+			String resp = Request.Post(PDD_Url).execute().returnContent().asString();
+			return resp;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "FAIL";
+	}
+	
+	private String PDD_Md5(Map<String, String> params, String lastKey) {
+		List<String> keys = new ArrayList<String>();
+		Set<Entry<String, String>> aSet = params.entrySet();
+		Iterator<Entry<String, String>> iter = aSet.iterator();
+		while(iter.hasNext()) {
+			Entry<String, String> entry = iter.next();
+			String key = entry.getKey();
+			keys.add(key);
+		}		
+		Collections.sort(keys, new Comparator<String>() {
+            public int compare(String arg0, String arg1) {
+                return arg0.compareTo(arg1);
+            }
+        });		
+		StringBuffer sb = new StringBuffer();
+		for(String key : keys) {
+			String value = params.get(key);
+			if(sb.length() == 0)
+				sb.append(key  + value);
+			else
+				sb.append( key  + value);
+		}
+		String s = lastKey+sb.toString()+lastKey;
+		return PDD_MD5(s);
+	}
+	
+	private String PDD_MD5(String s) {
+        char hexDigits[]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};       
+        try {
+            byte[] btInput = s.getBytes();
+            MessageDigest mdInst = MessageDigest.getInstance("MD5");
+            mdInst.update(btInput);
+            byte[] md = mdInst.digest();
+            int j = md.length;
+            char str[] = new char[j * 2];
+            int k = 0;
+            for (int i = 0; i < j; i++) {
+                byte byte0 = md[i];
+                str[k++] = hexDigits[byte0 >>> 4 & 0xf];
+                str[k++] = hexDigits[byte0 & 0xf];
+            }
+            return new String(str);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 	
 	
 	

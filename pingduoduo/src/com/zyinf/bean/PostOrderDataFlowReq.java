@@ -11,6 +11,8 @@ public class PostOrderDataFlowReq extends OrderDataFlowResp{
 	private String createTime;
 	
 	
+
+	
 	public String getStatus() {
 //		订购状态: ACCEPT 受理成功
 //		PROCESS 处理中
@@ -71,6 +73,7 @@ public class PostOrderDataFlowReq extends OrderDataFlowResp{
 		this.mobile = mobile;
 		this.prodNo = prodNo;
 		this.createTime = createTime;
+		this.setOrderNo(this.getTaskID());
 	}
 	
 	

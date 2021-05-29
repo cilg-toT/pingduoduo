@@ -10,4 +10,8 @@ public interface MyService {
 	public PostOrderDataFlowReq getOrderDataFlowResp(String mobile,String notifyUrl,String outOrderNo,String proNo);
 //	根据 dataFloat resType 和expireDay 定流量包
 	public PostOrderDataFlowReq getOrderDataFlowResp(String mobile,String notifyUrl,String outOrderNo,String resType,String dataFloat,String expireDay); 
+
+	
+	public String notifyUrl(String outOrderNo,String orderNo,String status);
+
 }

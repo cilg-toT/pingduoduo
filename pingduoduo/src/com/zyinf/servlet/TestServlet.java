@@ -30,7 +30,6 @@ public class TestServlet extends MyServlet {
 
 	public String doWork(HttpServletRequest request) throws Exception {
 		try {
-			
 			String outOrderNo = getStringParam(request, "outOrderNo", null);
 			if(outOrderNo == null)
 				throw new InvalidParamException("outOrderNo is null?");	
@@ -44,8 +43,10 @@ public class TestServlet extends MyServlet {
 			String prodNo =  getStringParam(request, "prodNo", null);
 			if(prodNo != null){
 	
-				PostOrderDataFlowReq orderDataFlowResp = myService.getOrderDataFlowResp(mobile, notifyUrl,outOrderNo, prodNo);
-				return gson().toJson(orderDataFlowResp);
+				PostOrderDataFlowReq orderDataFlowReq = myService.getOrderDataFlowResp(mobile, notifyUrl,outOrderNo, prodNo);
+				String jsonStr = gson().toJson(orderDataFlowReq);
+				System.out.println("返回给拼多多的字符串"+jsonStr);
+				return jsonStr;
 				
 			}else{
 				
@@ -59,11 +60,12 @@ public class TestServlet extends MyServlet {
 				if(expireDay == null)
 					throw new InvalidParamException("expireDay is null?");	
 				
+				System.out.println("订购流量->接收到拼多多的参数: mobile:"+mobile+",notifyUrl"+notifyUrl+", outOrderNo"+outOrderNo+", resType"+resType+", dataFloat"+dataFloat);
 				PostOrderDataFlowReq orderDataFlowReq = myService.getOrderDataFlowResp(mobile, notifyUrl,outOrderNo, resType, dataFloat, expireDay);
-				
-				return gson().toJson(orderDataFlowReq);
+				String jsonStr = gson().toJson(orderDataFlowReq);
+				System.out.println("订购流量->返回给拼多多的字符串"+jsonStr);
+				return jsonStr;
 			}
-			
 		}
 		catch(InvalidParamException e) {
 			OrderResp resp = new OrderResp();

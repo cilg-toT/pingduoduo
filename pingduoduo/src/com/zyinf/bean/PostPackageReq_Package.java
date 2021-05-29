@@ -6,11 +6,11 @@ public class PostPackageReq_Package extends GetPackageResp_Package {
 	private String PROD_NO;
 	private String PROD_NAME;
 	private String PROVINCE_NO;
-	private String RES_TYPE;
+	private String RES_TYPE = "1";
 	private String DATA_FLOAT;
 	private String PAR_PRICE;
 	
-	
+
 	public String getPROD_NO() {
 		return PROD_NO;
 	}

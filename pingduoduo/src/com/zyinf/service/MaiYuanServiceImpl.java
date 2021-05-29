@@ -21,15 +21,19 @@ import com.google.gson.Gson;
 import com.zyinf.bean.GetPackageResp_Package;
 import com.zyinf.bean.PostOrderDataFlowReq;
 import com.zyinf.bean.PostPackageRep;
+import com.zyinf.bean.PostPackageReq_Package;
 import com.zyinf.service.MaiYuanService;
-
+import com.zyinf.service.FileSaveServiceImpl;
 public class MaiYuanServiceImpl implements MaiYuanService {
 	static Logger log = Logger.getLogger(MaiYuanServiceImpl.class.getName());
 	
 	//packages 数据存储文件路径
 	static String filePath = "";
-	static String account = "";
-	static String key = "";
+	static String LiuLiang_Account = "pinduoduo_sw";
+	static String LiuLiang_Key = "07234354570d467881edc837a89f5685";
+	static String LiuLiang_Url = "http://114.55.39.33:8080/api.aspx";
+	
+	static FileSaveServiceImpl fileSaveServiceImpl = new FileSaveServiceImpl();
 	
 	static String PACKAGES_KEY = "PACKAGES_KEY";
 	
@@ -44,60 +48,40 @@ public class MaiYuanServiceImpl implements MaiYuanService {
 	@Override
 	public String getAccount() {
 		// TODO Auto-generated method stub
-		return account;
+		return LiuLiang_Account;
 	}
 
 	@Override
 	public String getKey() {
 		// TODO Auto-generated method stub
-		return key;
+		return LiuLiang_Key;
 	}
 	
 
-	@Override
-	public String getSign(String mobile, String packageStr) {
-		// TODO Auto-generated method stub
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("mobile", mobile);
-		map.put("account", account);
-		map.put("package", packageStr);
-		
-		String sign = appMd5(map,key);
-		return sign;
-	}
+
 	
 	@Override
-	public GetPackageResp_Package getPackageRespon(String prodNo) {
+	public PostPackageReq_Package getPackageRespon(String prodNo) {
 		// TODO Auto-generated method stub
-		GetPackageResp_Package packA = new GetPackageResp_Package();
-		Properties pro = new Properties();
-		FileInputStream in;
-		try {
-			in = new FileInputStream("a.properties");
-			pro.load(in);
-			in.close();
-			String jsonStr = pro.getProperty(PACKAGES_KEY);
-			GetPackageResp_Package[] array =  new Gson().fromJson(jsonStr, PostPackageRep.class).Packages;
-			for(GetPackageResp_Package pack:array){
-				if( pack.getPackage() == prodNo){
-					return pack;
-				}
-			}
-			
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		PostPackageReq_Package packA = new PostPackageReq_Package();
+		
+		packA.setDATA_FLOAT(prodNo);
+		packA.setName(prodNo);
+		packA.setPackage(prodNo);
+		packA.setPrice("10");
 		return packA;
 	}
 	
 	@Override
-	public GetPackageResp_Package getPackageRespon(String resType,
+	public PostPackageReq_Package getPackageRespon(String resType,
 			String dataFloat, String expireDay) {
 		// TODO Auto-generated method stub
-		GetPackageResp_Package packA = new GetPackageResp_Package();
-		
+		PostPackageReq_Package packA = new PostPackageReq_Package();
+		packA.setDATA_FLOAT(dataFloat);
+		packA.setName(dataFloat);
+		packA.setRES_TYPE(resType);
+		packA.setPackage(dataFloat);
+		packA.setPrice("10");
 		return packA;
 	}
 	
@@ -127,8 +111,9 @@ public class MaiYuanServiceImpl implements MaiYuanService {
 		return MD5(sb.toString());
 	}
 	
-	private String MD5(String s) {
-        char hexDigits[]={'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};       
+	@Override
+	public String MD5(String s) {
+		char hexDigits[]={'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};       
         try {
             byte[] btInput = s.getBytes();
             MessageDigest mdInst = MessageDigest.getInstance("MD5");
@@ -147,6 +132,32 @@ public class MaiYuanServiceImpl implements MaiYuanService {
             return null;
         }
     }
+
+	@Override
+	public void saveNotifyUrl(String notifyUrl, String outOrderNo) {
+		// TODO Auto-generated method stub
+		fileSaveServiceImpl.save(outOrderNo, notifyUrl);
+	}
+
+	@Override
+	public String getNofityUrl(String outOrderNo) {
+		// TODO Auto-generated method stub
+		return fileSaveServiceImpl.get(outOrderNo);
+	}
+
+	@Override
+	public String getMYSign(Map<String, String> param) {
+		// TODO Auto-generated method stub
+		return appMd5(param,LiuLiang_Key);
+	}
+
+	@Override
+	public String getLiuLiangUrl() {
+		// TODO Auto-generated method stub
+		return LiuLiang_Url;
+	}
+	
+
 	
 
 	

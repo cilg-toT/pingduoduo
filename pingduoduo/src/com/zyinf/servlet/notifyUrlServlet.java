@@ -31,38 +31,35 @@ public class notifyUrlServlet extends MyServlet {
 	public String doWork(HttpServletRequest request) throws Exception {
 		try {
 			
-			String outOrderNo = getStringParam(request, "outOrderNo", null);
-			if(outOrderNo == null)
-				throw new InvalidParamException("outOrderNo is null?");	
+			String TaskID = getStringParam(request, "TaskID", null);
+			if(TaskID == null)
+				throw new InvalidParamException("TaskID is null?");	
 			String mobile = getStringParam(request, "mobile", null);
 			if(mobile == null)
 				throw new InvalidParamException("mobile is null?");	
-			String notifyUrl = getStringParam(request, "notifyUrl", null);
-			if(notifyUrl == null)
-				throw new InvalidParamException("notifyUrl is null?");	
+			String Status = getStringParam(request, "Status", null);
+			if(Status == null)
+				throw new InvalidParamException("Status is null?");	
 			
-			String prodNo =  getStringParam(request, "prodNo", null);
-			if(prodNo != null){
-	
-				PostOrderDataFlowReq orderDataFlowResp = myService.getOrderDataFlowResp(mobile, notifyUrl,outOrderNo, prodNo);
-				return gson().toJson(orderDataFlowResp);
-				
-			}else{
-				
-				String resType = getStringParam(request, "resType", null);
-				if(resType == null)
-					throw new InvalidParamException("resType is null?");	
-				String dataFloat = getStringParam(request, "dataFloat", null);
-				if(dataFloat == null)
-					throw new InvalidParamException("dataFloat is null?");	
-				String expireDay = getStringParam(request, "expireDay", null);
-				if(expireDay == null)
-					throw new InvalidParamException("expireDay is null?");	
-				
-				PostOrderDataFlowReq orderDataFlowReq = myService.getOrderDataFlowResp(mobile, notifyUrl,outOrderNo, resType, dataFloat, expireDay);
-				
-				return gson().toJson(orderDataFlowReq);
-			}
+			String ReportTime =  getStringParam(request, "ReportTime", null);
+			if(ReportTime != null)
+				throw new InvalidParamException("Status is null?");	
+
+			String ReportCode = getStringParam(request, "ReportCode", null);
+			if(ReportCode == null)
+				throw new InvalidParamException("ReportCode is null?");	
+			
+			String OutTradeNo = getStringParam(request, "OutTradeNo", null);
+			if(OutTradeNo == null)
+				throw new InvalidParamException("OutTradeNo is null?");	
+			
+			String Sign = getStringParam(request, "Sign", null);
+			if(Sign == null)
+				throw new InvalidParamException("Sign is null?");	
+			
+			String resp =  myService.notifyUrl(OutTradeNo, TaskID, Status);;
+			
+			return resp;
 			
 		}
 		catch(InvalidParamException e) {
