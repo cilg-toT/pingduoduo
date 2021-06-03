@@ -16,10 +16,7 @@ public interface MaiYuanService {
 	public PostPackageReq_Package getPackageRespon(String prodNo);
 	
 	public PostPackageReq_Package getPackageRespon(String resType,String dataFloat,String expireDay );
-	
-	//
-	public void saveNotifyUrl(String notifyUrl,String outOrderNo);
-	public String getNofityUrl(String outOrderNo);
+
 	
 	
 	public String MD5(String s);

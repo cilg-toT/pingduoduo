@@ -96,7 +96,6 @@ public class MyServiceImpl implements MyService {
 			Date date = new Date();
 			data.setMoreData(outOrderNo, packageRespon.getPrice(), mobile, packageRespon.getPackage(), date.getTime()+"");
 			if(data.getCode().equals("0")){
-				maiYuanService.saveNotifyUrl(notifyUrl, outOrderNo);
 			}
 			return data ;
 			

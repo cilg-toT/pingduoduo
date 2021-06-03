@@ -23,7 +23,6 @@ import com.zyinf.bean.PostOrderDataFlowReq;
 import com.zyinf.bean.PostPackageRep;
 import com.zyinf.bean.PostPackageReq_Package;
 import com.zyinf.service.MaiYuanService;
-import com.zyinf.service.FileSaveServiceImpl;
 public class MaiYuanServiceImpl implements MaiYuanService {
 	static Logger log = Logger.getLogger(MaiYuanServiceImpl.class.getName());
 	
@@ -33,7 +32,6 @@ public class MaiYuanServiceImpl implements MaiYuanService {
 	static String LiuLiang_Key = "07234354570d467881edc837a89f5685";
 	static String LiuLiang_Url = "http://114.55.39.33:8080/api.aspx";
 	
-	static FileSaveServiceImpl fileSaveServiceImpl = new FileSaveServiceImpl();
 	
 	static String PACKAGES_KEY = "PACKAGES_KEY";
 	
@@ -133,17 +131,7 @@ public class MaiYuanServiceImpl implements MaiYuanService {
         }
     }
 
-	@Override
-	public void saveNotifyUrl(String notifyUrl, String outOrderNo) {
-		// TODO Auto-generated method stub
-		fileSaveServiceImpl.save(outOrderNo, notifyUrl);
-	}
 
-	@Override
-	public String getNofityUrl(String outOrderNo) {
-		// TODO Auto-generated method stub
-		return fileSaveServiceImpl.get(outOrderNo);
-	}
 
 	@Override
 	public String getMYSign(Map<String, String> param) {
