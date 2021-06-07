@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 import com.zyinf.bean.GetPackageResp;
+import com.zyinf.bean.PingDuoDuoResult;
 import com.zyinf.bean.PostOrderDataFlowReq;
 import com.zyinf.bean.OrderResp;
 import com.zyinf.exception.InvalidParamException;
@@ -44,8 +45,14 @@ public class TestServlet extends MyServlet {
 			if(prodNo != null){
 	
 				PostOrderDataFlowReq orderDataFlowReq = myService.getOrderDataFlowResp(mobile, notifyUrl,outOrderNo, prodNo);
-				String jsonStr = gson().toJson(orderDataFlowReq);
-				System.out.println("返回给拼多多的字符串"+jsonStr);
+				
+				PingDuoDuoResult<PostOrderDataFlowReq> result = new PingDuoDuoResult<PostOrderDataFlowReq>();
+				result.setResultData(orderDataFlowReq);
+				result.setResultCode("0");
+				result.setResultMsg(orderDataFlowReq.getMessage());
+				
+				String jsonStr = gson().toJson(result);
+				System.out.println("订购流量->返回给拼多多的字符串"+jsonStr);
 				return jsonStr;
 				
 			}else{
@@ -62,7 +69,13 @@ public class TestServlet extends MyServlet {
 				
 				System.out.println("订购流量->接收到拼多多的参数: mobile:"+mobile+",notifyUrl"+notifyUrl+", outOrderNo"+outOrderNo+", resType"+resType+", dataFloat"+dataFloat);
 				PostOrderDataFlowReq orderDataFlowReq = myService.getOrderDataFlowResp(mobile, notifyUrl,outOrderNo, resType, dataFloat, expireDay);
-				String jsonStr = gson().toJson(orderDataFlowReq);
+				
+				PingDuoDuoResult<PostOrderDataFlowReq> result = new PingDuoDuoResult<PostOrderDataFlowReq>();
+				result.setResultData(orderDataFlowReq);
+				result.setResultCode("0");
+				result.setResultMsg(orderDataFlowReq.getMessage());
+				
+				String jsonStr = gson().toJson(result);
 				System.out.println("订购流量->返回给拼多多的字符串"+jsonStr);
 				return jsonStr;
 			}

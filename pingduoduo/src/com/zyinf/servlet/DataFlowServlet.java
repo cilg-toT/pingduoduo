@@ -16,51 +16,60 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 import com.zyinf.bean.GetPackageResp;
+import com.zyinf.bean.PingDuoDuoResult;
 import com.zyinf.bean.PostOrderDataFlowReq;
 import com.zyinf.bean.OrderResp;
+import com.zyinf.bean.dataFlow.PDDDataFlowReq;
+import com.zyinf.bean.dataFlow.PDDDataFlowRsp;
+import com.zyinf.bean.telFee.MYNotifyReq;
+import com.zyinf.bean.telFee.PDDOrderTelFeeByPhoneReq;
 import com.zyinf.exception.InvalidParamException;
+import com.zyinf.service.dataFlow.DataFlowService;
+import com.zyinf.service.dataFlow.DataFlowServiceImpl;
 
 
-public class notifyUrlServlet extends MyServlet {
+public class DataFlowServlet extends MyServlet {
 	private static final long serialVersionUID = 4048847830736501287L;
-	
-	static Logger log = Logger.getLogger(notifyUrlServlet.class.getName());
+	static Logger log = Logger.getLogger(DataFlowServlet.class.getName());
 	
 	final String appKey1 = "2185dba9b2ed3e9e811f1f63636caa11";
 	final String account1 = "hzhxtest";
+	static DataFlowService dataFlowService = new DataFlowServiceImpl();
 
 	public String doWork(HttpServletRequest request) throws Exception {
 		try {
+			String outOrderNo = getStringParam(request, "outOrderNo", null);
+			if(outOrderNo == null)
+				throw new InvalidParamException("outOrderNo is null?");	
 			
-			String TaskID = getStringParam(request, "TaskID", null);
-			if(TaskID == null)
-				throw new InvalidParamException("TaskID is null?");	
-			String mobile = getStringParam(request, "Mobile", null);
+			String prodNo = getStringParam(request, "prodNo", null);
+			
+			String mobile = getStringParam(request, "mobile", null);
 			if(mobile == null)
-				throw new InvalidParamException("Mobile is null?");	
-			String Status = getStringParam(request, "Status", null);
-			if(Status == null)
-				throw new InvalidParamException("Status is null?");	
+				throw new InvalidParamException("mobile is null?");	
 			
-			String ReportTime =  getStringParam(request, "ReportTime", null);
-			if(ReportTime == null)
-				throw new InvalidParamException("ReportTime is null?");	
-
-			String ReportCode = getStringParam(request, "ReportCode", null);
-			if(ReportCode == null)
-				throw new InvalidParamException("ReportCode is null?");	
+			String notifyUrl = getStringParam(request, "notifyUrl", null);
+			if(notifyUrl == null)
+				throw new InvalidParamException("notifyUrl is null?");	
 			
-			String OutTradeNo = getStringParam(request, "OutTradeNo", null);
-			if(OutTradeNo == null)
-				throw new InvalidParamException("OutTradeNo is null?");	
+			String resType = getStringParam(request, "resType", null);
 			
-			String Sign = getStringParam(request, "Sign", null);
-			if(Sign == null)
-				throw new InvalidParamException("Sign is null?");	
+			String dataFloat = getStringParam(request, "dataFloat", null);
+			String expireDay = getStringParam(request, "expireDay", null);
 			
-			String resp =  myService.notifyUrl(OutTradeNo, TaskID, Status);
+			PDDDataFlowReq req = new PDDDataFlowReq();
+			req.setOutOrderNo(outOrderNo);
+			req.setProdNo(prodNo);
+			req.setAmount("1");
+			req.setMobile(mobile);
+			req.setNotifyUrl(notifyUrl);
+			req.setResType(resType);
+			req.setDataFloat(dataFloat);
+			req.setExpireDay(expireDay);
 			
-			return resp;
+			PingDuoDuoResult<PDDDataFlowRsp> result = dataFlowService.requstMYDataFlow(req);
+			return gson().toJson(result);
+			
 			
 		}
 		catch(InvalidParamException e) {

@@ -18,17 +18,24 @@ import org.apache.log4j.Logger;
 import com.zyinf.bean.GetPackageResp;
 import com.zyinf.bean.PostOrderDataFlowReq;
 import com.zyinf.bean.OrderResp;
+import com.zyinf.bean.dataFlow.MYNotifyDataFlowReq;
+import com.zyinf.bean.telFee.MYNotifyReq;
 import com.zyinf.exception.InvalidParamException;
+import com.zyinf.service.dataFlow.DataFlowService;
+import com.zyinf.service.dataFlow.DataFlowServiceImpl;
 
 
-public class notifyUrlServlet extends MyServlet {
+public class DataFLowNotifyUrlServlet extends MyServlet {
 	private static final long serialVersionUID = 4048847830736501287L;
 	
-	static Logger log = Logger.getLogger(notifyUrlServlet.class.getName());
+	static Logger log = Logger.getLogger(DataFLowNotifyUrlServlet.class.getName());
 	
 	final String appKey1 = "2185dba9b2ed3e9e811f1f63636caa11";
 	final String account1 = "hzhxtest";
+	
+	static DataFlowService dataFlowService = new DataFlowServiceImpl();
 
+	
 	public String doWork(HttpServletRequest request) throws Exception {
 		try {
 			
@@ -58,9 +65,18 @@ public class notifyUrlServlet extends MyServlet {
 			if(Sign == null)
 				throw new InvalidParamException("Sign is null?");	
 			
-			String resp =  myService.notifyUrl(OutTradeNo, TaskID, Status);
+			MYNotifyDataFlowReq req = new MYNotifyDataFlowReq();
+			req.setTaskID(TaskID);
+			req.setMobile(mobile);
+			req.setStatus(Status);
+			req.setReportTime(ReportTime);
+			req.setReportCode(ReportCode);
+			req.setOutTradeNo(OutTradeNo);
+			req.setSign(Sign);
 			
-			return resp;
+			System.out.println("迈远回调数据"+gson().toJson(req));
+			
+			return dataFlowService.requstPDDDataFlowNotify(req);
 			
 		}
 		catch(InvalidParamException e) {

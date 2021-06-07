@@ -18,17 +18,22 @@ import org.apache.log4j.Logger;
 import com.zyinf.bean.GetPackageResp;
 import com.zyinf.bean.PostOrderDataFlowReq;
 import com.zyinf.bean.OrderResp;
+import com.zyinf.bean.telFee.MYNotifyReq;
 import com.zyinf.exception.InvalidParamException;
+import com.zyinf.service.telFee.TelFeeService;
+import com.zyinf.service.telFee.TelFeeServiceImpl;
 
 
-public class notifyUrlServlet extends MyServlet {
+public class TelFeeNotifyUrlServlet extends MyServlet {
 	private static final long serialVersionUID = 4048847830736501287L;
-	
-	static Logger log = Logger.getLogger(notifyUrlServlet.class.getName());
+	static Logger log = Logger.getLogger(TelFeeNotifyUrlServlet.class.getName());
+	static TelFeeService telFeeService = new TelFeeServiceImpl();
 	
 	final String appKey1 = "2185dba9b2ed3e9e811f1f63636caa11";
 	final String account1 = "hzhxtest";
 
+	private static TelFeeService telFeeServiceImpl = new TelFeeServiceImpl();
+	
 	public String doWork(HttpServletRequest request) throws Exception {
 		try {
 			
@@ -58,9 +63,18 @@ public class notifyUrlServlet extends MyServlet {
 			if(Sign == null)
 				throw new InvalidParamException("Sign is null?");	
 			
-			String resp =  myService.notifyUrl(OutTradeNo, TaskID, Status);
 			
-			return resp;
+			MYNotifyReq req = new MYNotifyReq();
+			req.setMobile(mobile);
+			req.setTaskID(TaskID);
+			req.setStatus(Status);
+			req.setOutTradeNo(OutTradeNo);
+			req.setReportCode(ReportCode);
+			req.setReportTime(ReportTime);
+			req.setSign(Sign);
+			
+			
+			return telFeeService.requstPDDTelNotify(req);
 			
 		}
 		catch(InvalidParamException e) {

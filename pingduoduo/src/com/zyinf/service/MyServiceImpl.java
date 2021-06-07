@@ -114,7 +114,6 @@ public class MyServiceImpl implements MyService {
 		status = status.equals("4")?"SUCCESS":"FAIL";
 		Map<String,String> map = new HashMap<String,String>();
 		
-		
 		map.put("order_sn", outOrderNo);
 		map.put("outer_order_sn", orderNo);
 		map.put("status", status);
