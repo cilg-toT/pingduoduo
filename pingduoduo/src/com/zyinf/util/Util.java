@@ -1,5 +1,7 @@
 package com.zyinf.util;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -16,6 +19,29 @@ public class Util {
 	/**
 	 * 时间
 	 */
+	
+	public static String getMaiYuanConfig(String key) {
+		Properties properties = new Properties();
+		String path = Thread.currentThread().getContextClassLoader().getResource("/").getPath(); 
+		String[] split = path.split("/");
+		split[split.length -1] = "conf";
+		path = "";
+		for (int i = 0; i < split.length; i++) {
+			path = path+ split[i]+"/";
+		}
+		
+		try {
+			properties.load(new FileInputStream(path+"maiYuan.properties"));
+			String string =   properties.get(key).toString();
+			return string;
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static Date now() {
 		return Calendar.getInstance().getTime();
 	}

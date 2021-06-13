@@ -18,11 +18,13 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Until;
 import com.zyinf.bean.GetPackageResp_Package;
 import com.zyinf.bean.PostOrderDataFlowReq;
 import com.zyinf.bean.PostPackageRep;
 import com.zyinf.bean.PostPackageReq_Package;
 import com.zyinf.service.MaiYuanService;
+import com.zyinf.util.Util;
 public class MaiYuanServiceImpl implements MaiYuanService {
 	static Logger log = Logger.getLogger(MaiYuanServiceImpl.class.getName());
 	
@@ -39,23 +41,19 @@ public class MaiYuanServiceImpl implements MaiYuanService {
 	static String PACKAGES_KEY = "PACKAGES_KEY";
 	
 	public void init() throws Exception {
+		
 	}
 	
 	public void destroy() throws Exception {
 	}
-
 	
 	
-	
-	
-
 
 	
 	@Override
 	public PostPackageReq_Package getPackageRespon(String prodNo) {
 		// TODO Auto-generated method stub
 		PostPackageReq_Package packA = new PostPackageReq_Package();
-		
 		packA.setDATA_FLOAT(prodNo);
 		packA.setName(prodNo);
 		packA.setPackage(prodNo);
@@ -137,46 +135,53 @@ public class MaiYuanServiceImpl implements MaiYuanService {
 	@Override
 	public String getMYSign(Map<String, String> param) {
 		// TODO Auto-generated method stub
-		return appMd5(param,LiuLiang_Key);
+		return appMd5(param,getKey());
 	}
 	@Override
 	public String getMYTelFeeSign(Map<String, String> param) {
 		// TODO Auto-generated method stub
-		return appMd5(param,TelFee_Key);
+		return appMd5(param,getTelFeeKey());
 	}
 
 	@Override
 	public String getLiuLiangUrl() {
 		// TODO Auto-generated method stub
+		LiuLiang_Url = Util.getMaiYuanConfig("LiuLiang_Url");
 		return LiuLiang_Url;
 	}
 	
 	@Override
 	public String getTelFeeUrl() {
 		// TODO Auto-generated method stub
+		TelFee_Url = Util.getMaiYuanConfig("TelFee_Url");
 		return TelFee_Url;
 	}
 	
+	
+	
 	@Override
 	public String getAccount() {
-		// TODO Auto-generated method stub
+		LiuLiang_Account =  Util.getMaiYuanConfig("LiuLiang_Account");
 		return LiuLiang_Account;
 	}
 
 	@Override
 	public String getKey() {
 		// TODO Auto-generated method stub
+		 LiuLiang_Key =  Util.getMaiYuanConfig("LiuLiang_Key");
 		return LiuLiang_Key;
 	}
 	@Override
 	public String getTelFeeAccount() {
 		// TODO Auto-generated method stub
+		TelFee_Account =  Util.getMaiYuanConfig("TelFee_Account");
 		return TelFee_Account;
 	}
 
 	@Override
 	public String getTelFeeKey() {
 		// TODO Auto-generated method stub
+		TelFee_Key =  Util.getMaiYuanConfig("TelFee_Key");
 		return TelFee_Key;
 	}
 	

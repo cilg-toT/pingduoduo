@@ -20,6 +20,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.mysql.jdbc.Util;
 import com.zyinf.bean.FlowPara;
 import com.zyinf.bean.GetPackageResp;
 import com.zyinf.bean.GetPackageResp_Package;
@@ -125,7 +126,7 @@ public class MyServiceImpl implements MyService {
 		map.put("data_type", "JSON");
 		map.put("timestamp", timestamp);
 		
-		String sign = PDD_Md5(map,PDD_SecretKey);
+		String sign = PDD_Md5(map,com.zyinf.util.Util.getMaiYuanConfig("PDD_SecretKey"));
 		
 		String PDD_Url="http://open.yangkeduo.com/api/router?type=pdd.virtual.mobile.charge.notify&data_type=JSON&timestamp="+timestamp
 				+"&order_sn="+outOrderNo

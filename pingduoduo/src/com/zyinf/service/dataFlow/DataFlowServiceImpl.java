@@ -37,6 +37,7 @@ import com.zyinf.bean.telFee.MYOrderTelFeeByPhoneRsp;
 import com.zyinf.bean.telFee.PDDOrderTelFeeByPhoneRsp;
 import com.zyinf.service.MaiYuanService;
 import com.zyinf.service.MaiYuanServiceImpl;
+import com.zyinf.util.Util;
 
 
 public class DataFlowServiceImpl implements DataFlowService {
@@ -62,6 +63,7 @@ public class DataFlowServiceImpl implements DataFlowService {
 		form.add("OutTradeNo", req.getOutTradeNo());
 		//默认是1
 		form.add("PackageType",req.getPackageType());
+		
 		 
 		form.add("account", req.getAccount()).add("mobile", req.getMobile()).add("package", req.getPackage());
 		
@@ -91,6 +93,11 @@ public class DataFlowServiceImpl implements DataFlowService {
 	}
 	
 	
+	public String notifyFail(MYNotifyDataFlowReq req){
+		
+		
+		return null;
+	}
 	
 	@Override
 	public String requstPDDDataFlowNotify(MYNotifyDataFlowReq req) {
@@ -110,7 +117,7 @@ public class DataFlowServiceImpl implements DataFlowService {
 		map.put("data_type", "JSON");
 		map.put("timestamp", timestamp);
 				
-		String sign = maiYuanService.PDD_Md5(map,PDD_SecretKey);
+		String sign = maiYuanService.PDD_Md5(map,Util.getMaiYuanConfig("PDD_SecretKey"));
 				
 		String PDD_Url="http://open.yangkeduo.com/api/router?type=pdd.virtual.mobile.charge.notify&data_type=JSON&timestamp="+timestamp
 						+"&order_sn="+req.getOutTradeNo()
@@ -137,11 +144,11 @@ public class DataFlowServiceImpl implements DataFlowService {
 		rsp.setMobile(req1.getMobile());
 		rsp.setOutOrderNo(req1.getOutOrderNo());
 		rsp.setOrderNo(rsp1.getTaskID());
-		rsp.setTotalFee(req1.getProdNo()==null?req1.getProdNo():req1.getDataFloat());
+		rsp.setTotalFee(req1.getProdNo()!=null?req1.getProdNo():req1.getDataFloat());
 		rsp.setProdNo(req1.getProdNo()==null?req1.getProdNo():req1.getDataFloat());
 		rsp.setCreateTime(new Date().getTime()+"");
-		rsp.setStatus(rsp1.getCode().equals("0")?"PROCESS":"ACCEPT");
-		
+		rsp.setStatus(rsp1.getCode().equals("0")?"ACCEPT":"PROCESS");
+		//rsp.setTotalFee(req1.getProdNo());
 		return rsp;
 	}
 	public MYDataFlowReq getMYDataFlowReq(PDDDataFlowReq req1){
